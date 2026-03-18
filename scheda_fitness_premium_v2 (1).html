@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scheda Fitness Premium — Chiara</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9f9f9;color:#1a1a1a;padding:1rem}
+.wrap{max-width:900px;margin:0 auto;padding:1rem 0 3rem}
+.hero{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.hero-name{font-size:20px;font-weight:600}
+.hero-sub{font-size:13px;color:#666;margin-top:3px}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:#FBEAF0;color:#72243E;border:1px solid #ED93B1;margin:6px 3px 0 0}
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:1rem}
+.stat-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:10px;text-align:center}
+.stat-val{font-size:16px;font-weight:600;color:#D4537E}
+.stat-lbl{font-size:10px;color:#888;margin-top:2px}
+.nav{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.nav-btn{padding:7px 16px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#666;font-size:13px;cursor:pointer;transition:all .15s}
+.nav-btn:hover{background:#f5f5f5}
+.nav-btn.active{background:#FBEAF0;border-color:#D4537E;color:#72243E;font-weight:500}
+.panel{display:none}
+.panel.active{display:block}
+.day-tabs{display:flex;gap:8px;margin-bottom:1rem}
+.day-tab{padding:9px 22px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#666;font-size:13px;cursor:pointer;font-weight:500;transition:all .15s}
+.day-tab.active{background:#D4537E;border-color:#D4537E;color:#fff}
+.day-content{display:none}
+.day-content.active{display:block}
+.block-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;margin:1rem 0 .6rem}
+.block-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.block-title{font-size:13px;font-weight:600}
+.block-meta{font-size:11px;color:#666;margin-left:auto}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:.5rem}
+.ex-card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.ex-card:hover,.ex-card.open{border-color:#D4537E}
+.ex-num-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 0;background:#f5f5f5}
+.ex-num{font-size:10px;font-weight:600;color:#D4537E;background:#FBEAF0;border-radius:20px;padding:2px 8px}
+.ex-chips-top{display:flex;gap:4px}
+.ex-chip{font-size:10px;padding:2px 7px;border-radius:20px;background:#fff;color:#666;border:1px solid #e0e0e0}
+.fig-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;padding:12px 8px 8px;min-height:110px}
+.ex-bottom{padding:8px 12px 10px}
+.ex-name{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.ex-muscles{font-size:11px;color:#666}
+.ex-detail{display:none;padding:10px 12px;border-top:1px solid #eee;background:#f9f9f9}
+.ex-card.open .ex-detail{display:block}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.info-box{background:#fff;border-radius:8px;padding:6px;text-align:center;border:1px solid #e0e0e0}
+.info-val{font-size:13px;font-weight:600;color:#D4537E}
+.info-key{font-size:9px;color:#888;margin-top:1px}
+.step{display:flex;gap:8px;margin-bottom:5px;font-size:12px;line-height:1.6;color:#1a1a1a}
+.step-num{width:18px;height:18px;background:#D4537E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;margin-top:2px}
+.cue-box{background:#FBEAF0;border-radius:8px;padding:6px 8px;font-size:11px;color:#72243E;margin-top:5px;line-height:1.5}
+.warn-box{background:#fff;border:1px solid #F0957B;border-radius:8px;padding:5px 8px;font-size:11px;color:#993C1D;margin-top:5px;line-height:1.5}
+.warmup-t{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:.75rem}
+.warmup-t th{background:#f5f5f5;color:#666;padding:6px 10px;text-align:left;border-bottom:1px solid #e0e0e0;font-weight:600;font-size:11px}
+.warmup-t td{padding:7px 10px;border-bottom:1px solid #f0f0f0;color:#1a1a1a}
+.warmup-t tr:last-child td{border-bottom:none}
+.warmup-t tr:nth-child(even) td{background:#f9f9f9}
+.prog-row{display:grid;grid-template-columns:160px 1fr 1fr;gap:1px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:6px}
+.prog-cell{padding:8px 12px;background:#fff;font-size:12px}
+.prog-cell.name{background:#f5f5f5;font-weight:600;font-size:12px}
+.prog-cell.w2{background:#FBEAF0;color:#72243E}
+.tip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.tip-card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1rem}
+.tip-ico{font-size:18px;margin-bottom:6px}
+.tip-t{font-size:13px;font-weight:600;margin-bottom:4px}
+.tip-b{font-size:12px;color:#666;line-height:1.6}
+.week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
+.wk-card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1rem;text-align:center}
+.wk-title{font-size:11px;color:#666;margin-bottom:8px}
+.wk-days{display:flex;justify-content:center;gap:8px}
+.wk-day-btn{width:36px;height:36px;border-radius:50%;border:1px solid #ccc;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:#666;transition:all .15s}
+.wk-day-btn.done{background:#D4537E;border-color:#D4537E;color:#fff}
+.section-note{font-size:12px;color:#555;margin-bottom:.75rem;line-height:1.6;background:#f5f5f5;border-radius:8px;padding:8px 12px;border-left:3px solid #D4537E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="hero-name">Programma Chiara — 4 Settimane</div>
+      <div class="hero-sub">Tonificazione · Glutei · Core · 2 sessioni/settimana · 35–40 min</div>
+      <div><span class="badge">25 anni · 53 kg · 163 cm</span><span class="badge">Livello intermedio</span><span class="badge">Corpo libero</span></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:#888">Sessioni completate</div>
+      <div style="font-size:24px;font-weight:600;color:#D4537E"><span id="done-n">0</span><span style="font-size:14px;color:#888">/8</span></div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">19</div><div class="stat-lbl">esercizi totali</div></div>
+    <div class="stat-card"><div class="stat-val">35'</div><div class="stat-lbl">durata media</div></div>
+    <div class="stat-card"><div class="stat-val">4 W</div><div class="stat-lbl">durata programma</div></div>
+    <div class="stat-card"><div class="stat-val">2x</div><div class="stat-lbl">frequenza/sett.</div></div>
+    <div class="stat-card"><div class="stat-val" id="pct-val">0%</div><div class="stat-lbl">completamento</div></div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPanel('allenamento',this)">Allenamento</button>
+  <button class="nav-btn" onclick="showPanel('progressione',this)">Progressione</button>
+  <button class="nav-btn" onclick="showPanel('consigli',this)">Consigli PT</button>
+  <button class="nav-btn" onclick="showPanel('tracker',this)">Tracker</button>
+</div>
+
+<div id="allenamento" class="panel active">
+  <div class="day-tabs">
+    <button class="day-tab active" onclick="showDay('A',this)">Giorno A — Glutei · Gambe · Core</button>
+    <button class="day-tab" onclick="showDay('B',this)">Giorno B — Busto · Cardio · Core</button>
+  </div>
+
+  <div id="day-A" class="day-content active">
+    <div class="section-note">Attiva sempre i glutei prima di iniziare: fai 15 ponti glutei lenti come "sveglia muscolare". Prima di ogni esercizio pensa al muscolo che deve lavorare — questo raddoppia l'efficacia.</div>
+    <div class="block-hdr" style="background:#FBEAF0"><div class="block-dot" style="background:#D4537E"></div><div class="block-title">Riscaldamento attivo</div><div class="block-meta">5–6 min · nessuna pausa</div></div>
+    <table class="warmup-t">
+      <tr><th>#</th><th>Esercizio</th><th>Durata/Rip</th><th>Come farlo</th></tr>
+      <tr><td>1</td><td>Marcia sul posto con ginocchia alte</td><td>60 sec</td><td>Porta ogni ginocchio all'altezza dell'anca. Braccia che oscillano come nella corsa.</td></tr>
+      <tr><td>2</td><td>Hip circle in quadrupedia</td><td>10 per lato</td><td>A 4 appoggi, disegna cerchi ampi con un'anca verso il soffitto. Sblocca le anche.</td></tr>
+      <tr><td>3</td><td>Squat lento (3 sec discesa)</td><td>10 rip</td><td>Conta 3 secondi scendendo. Non rimbalzare in basso. Senti i muscoli attivarsi.</td></tr>
+      <tr><td>4</td><td>Ponte glutei isometrico</td><td>12 rip + 3 sec tenuta</td><td>Sdraiata, piedi a terra. Solleva bacino e tieni 3 sec. Controlla il muscolo.</td></tr>
+      <tr><td>5</td><td>Rotazioni busto con piedi fissi</td><td>10 per lato</td><td>Braccia aperte a croce, ruota solo il busto. Mobilità colonna toracica.</td></tr>
+    </table>
+    <div class="block-hdr" style="background:#FBEAF0"><div class="block-dot" style="background:#993556"></div><div class="block-title">Blocco A — Forza glutei e gambe</div><div class="block-meta">16–18 min</div></div>
+    <div class="ex-grid" id="grid-a-lower"></div>
+    <div class="block-hdr" style="background:#EAF3DE"><div class="block-dot" style="background:#3B6D11"></div><div class="block-title">Blocco B — Core e addome</div><div class="block-meta">10 min</div></div>
+    <div class="ex-grid" id="grid-a-core"></div>
+    <div class="block-hdr" style="background:#f0ede8"><div class="block-dot" style="background:#5F5E5A"></div><div class="block-title">Defaticamento Giorno A</div><div class="block-meta">5 min</div></div>
+    <table class="warmup-t">
+      <tr><th>Esercizio</th><th>Durata</th><th>Come farlo</th></tr>
+      <tr><td>Pigeon pose (piccione)</td><td>45 sec/lato</td><td>Da quadrupedia porta una gamba davanti piegata a 90°. L'altra tesa indietro. Abbassa il busto. Senti apertura profonda dell'anca e del gluteo.</td></tr>
+      <tr><td>Stiramento femorali seduta</td><td>40 sec/gamba</td><td>Seduta, una gamba tesa. Piega il busto in avanti tenendo la schiena DRITTA. Senti il tendine sotto la coscia.</td></tr>
+      <tr><td>Cat-cow (gatto-mucca)</td><td>60 sec</td><td>A 4 appoggi. Inspira e inarca la schiena in giù (mucca). Espira e arrotonda verso il soffitto (gatto). Vertebra per vertebra.</td></tr>
+      <tr><td>Stiramento quadricipite</td><td>30 sec/gamba</td><td>In piedi, porta il tallone verso il gluteo tenendo il ginocchio verso il basso. Bacino neutro.</td></tr>
+      <tr><td>Respirazione diaframmatica</td><td>60 sec</td><td>Mano sulla pancia. Inspira 4 sec gonfiando la pancia. Tieni 4. Espira 6.</td></tr>
+    </table>
+  </div>
+
+  <div id="day-B" class="day-content">
+    <div class="section-note">Abbassa le spalle e tienile lontane dalle orecchie per tutta la sessione. Prima di ogni esercizio di tirata, retrare le scapole — il muscolo corretto si attiverà molto di più.</div>
+    <div class="block-hdr" style="background:#FBEAF0"><div class="block-dot" style="background:#D4537E"></div><div class="block-title">Riscaldamento attivo</div><div class="block-meta">5 min</div></div>
+    <table class="warmup-t">
+      <tr><th>#</th><th>Esercizio</th><th>Durata/Rip</th><th>Come farlo</th></tr>
+      <tr><td>1</td><td>Rotazioni spalle (avanti + indietro)</td><td>10 per verso</td><td>Braccia lungo i fianchi. Ruota le spalle in cerchi ampi. Collo libero e rilassato.</td></tr>
+      <tr><td>2</td><td>Arm circles (cerchi braccia)</td><td>10 per lato</td><td>Braccia tese laterali. Disegna cerchi grandi. Prima piccoli poi sempre più ampi.</td></tr>
+      <tr><td>3</td><td>Shoulder pass-through</td><td>10 rip</td><td>Tieni un asciugamano largo. Porta le braccia tese dall'avanti sopra la testa e dietro.</td></tr>
+      <tr><td>4</td><td>Inchworm (bruco)</td><td>6 rip</td><td>In piedi, cammina con le mani verso avanti fino a plank. Torna camminando con i piedi.</td></tr>
+      <tr><td>5</td><td>Jumping jack</td><td>40 sec</td><td>Piedi uniti. Salta aprendo gambe e braccia. Atterraggio morbido sulle punte.</td></tr>
+    </table>
+    <div class="block-hdr" style="background:#FBEAF0"><div class="block-dot" style="background:#993556"></div><div class="block-title">Blocco A — Busto (forza e tono)</div><div class="block-meta">15 min</div></div>
+    <div class="ex-grid" id="grid-b-upper"></div>
+    <div class="block-hdr" style="background:#E6F1FB"><div class="block-dot" style="background:#185FA5"></div><div class="block-title">Blocco B — Cardio metabolico HIIT</div><div class="block-meta">8–10 min · 2–3 round</div></div>
+    <div class="ex-grid" id="grid-b-cardio"></div>
+    <div class="block-hdr" style="background:#EAF3DE"><div class="block-dot" style="background:#3B6D11"></div><div class="block-title">Blocco C — Core finisher</div><div class="block-meta">5 min</div></div>
+    <div class="ex-grid" id="grid-b-core"></div>
+    <div class="block-hdr" style="background:#f0ede8"><div class="block-dot" style="background:#5F5E5A"></div><div class="block-title">Defaticamento Giorno B</div><div class="block-meta">5 min</div></div>
+    <table class="warmup-t">
+      <tr><th>Esercizio</th><th>Durata</th><th>Come farlo</th></tr>
+      <tr><td>Stiramento petto a porta</td><td>40 sec/lato</td><td>Gomito piegato a 90° appoggiato allo stipite. Ruota il corpo verso l'altro lato. Senti il petto aprirsi.</td></tr>
+      <tr><td>Stiramento dorsale (bambino)</td><td>60 sec</td><td>In ginocchio, siediti sui talloni, braccia distese avanti. Decomprime la colonna.</td></tr>
+      <tr><td>Stiramento tricipite</td><td>30 sec/braccio</td><td>Porta un gomito dietro la testa. Con l'altra mano spingi delicatamente il gomito indietro.</td></tr>
+      <tr><td>Rotazioni collo lente</td><td>30 sec</td><td>Orecchio verso la spalla, mento verso il petto, orecchio all'altra spalla. Mai indietro.</td></tr>
+      <tr><td>Respirazione 4-7-8</td><td>3 cicli</td><td>Inspira 4 sec. Tieni 7 sec. Espira 8 sec. Calma il sistema nervoso.</td></tr>
+    </table>
+  </div>
+</div>
+
+<div id="progressione" class="panel">
+  <div class="section-note">Le prime 2 settimane costruisci la tecnica. Dalle settimane 3–4 aumenti carico e volume. Non bruciare le tappe: una settimana con forma perfetta vale più di tre settimane sbagliate.</div>
+  <div style="display:grid;grid-template-columns:160px 1fr 1fr;gap:1px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:12px">
+    <div class="prog-cell" style="background:#D4537E;color:#fff;font-weight:600;font-size:11px">Esercizio</div>
+    <div class="prog-cell" style="background:#D4537E;color:#fff;font-size:11px">Sett. 1–2 (tecnica)</div>
+    <div class="prog-cell" style="background:#993556;color:#fff;font-size:11px">Sett. 3–4 (progressione)</div>
+  </div>
+  <div id="prog-rows"></div>
+  <div style="font-size:14px;font-weight:600;margin:1.25rem 0 .6rem">Alternative per ogni livello</div>
+  <div style="background:#fff;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden">
+    <div style="display:grid;grid-template-columns:140px 1fr 1fr;gap:1px;background:#e0e0e0">
+      <div style="padding:7px 10px;background:#f5f5f5;font-size:11px;font-weight:600;color:#666">Esercizio</div>
+      <div style="padding:7px 10px;background:#EAF3DE;font-size:11px;font-weight:600;color:#3B6D11">Versione più semplice</div>
+      <div style="padding:7px 10px;background:#FBEAF0;font-size:11px;font-weight:600;color:#993556">Versione avanzata</div>
+    </div>
+    <div id="alt-rows"></div>
+  </div>
+</div>
+
+<div id="consigli" class="panel">
+  <div class="section-note">Questi non sono consigli generici — sono le variabili che determinano il 50% dei tuoi risultati fuori dalla palestra.</div>
+  <div class="tip-grid" id="tip-grid"></div>
+</div>
+
+<div id="tracker" class="panel">
+  <div class="section-note">Segna ogni sessione completata cliccando A o B. 8 sessioni totali in 4 settimane. Almeno 2 giorni di riposo tra le sessioni.</div>
+  <div class="week-grid" id="week-grid"></div>
+  <div style="background:#f5f5f5;border-radius:12px;padding:1rem 1.25rem;margin-top:.5rem">
+    <div style="font-size:13px;font-weight:600;margin-bottom:.5rem">Come organizzare la settimana</div>
+    <div style="font-size:12px;color:#555;line-height:1.9">
+      <div><strong>Opzione 1:</strong> Lunedì (A) → Giovedì (B) — classica, 3 giorni di recupero</div>
+      <div><strong>Opzione 2:</strong> Martedì (A) → Venerdì (B) — liberi il weekend</div>
+      <div><strong>Opzione 3:</strong> Mercoledì (A) → Sabato (B) — ideale per orari lavorativi</div>
+      <div><strong>Giorni di riposo:</strong> cammina 30–45 min. Il movimento leggero accelera il recupero.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function showDay(d,btn){
+  document.querySelectorAll('.day-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('day-'+d).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleEx(id){document.getElementById(id).classList.toggle('open')}
+
+const SVG={
+squat_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><ellipse cx="55" cy="36" rx="11" ry="14" fill="#2D2D2D"/><circle cx="55" cy="16" r="9" fill="#2D2D2D"/><path d="M50 48 Q36 56 30 70" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M60 48 Q74 56 80 70" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M30 70 Q28 84 32 92" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M80 70 Q82 84 78 92" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M46 38 Q32 38 22 35" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M64 38 Q78 38 88 35" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><defs><marker id="a1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M55 48 L55 28" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a1)"/></svg>`,
+hip_thrust_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><rect x="2" y="56" width="28" height="10" rx="3" fill="#9E9E9E"/><path d="M8 56 Q20 48 34 50" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><circle cx="8" cy="50" r="8" fill="#2D2D2D"/><ellipse cx="52" cy="40" rx="13" ry="9" fill="#2D2D2D"/><path d="M46 46 Q44 66 46 80" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M58 46 Q62 66 64 80" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M46 80 Q44 86 40 88" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M64 80 Q66 86 70 88" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><defs><marker id="a2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M72 44 L80 30" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a2)"/></svg>`,
+reverse_lunge_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="52" cy="34" rx="10" ry="13" fill="#2D2D2D"/><circle cx="52" cy="17" r="8" fill="#2D2D2D"/><path d="M48 46 Q46 62 42 78" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M42 78 Q40 88 42 96" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M56 46 Q66 60 70 72" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M70 72 Q68 84 62 90" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="70" cy="72" r="4" fill="#D4537E" opacity=".8"/><path d="M44 38 Q34 44 26 42" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M60 38 Q70 44 78 42" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`,
+sumo_squat_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="55" cy="40" rx="12" ry="14" fill="#2D2D2D"/><circle cx="55" cy="21" r="8" fill="#2D2D2D"/><path d="M48 52 Q34 60 24 74" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M62 52 Q76 60 86 74" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M24 74 Q20 86 22 96" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M86 74 Q90 86 88 96" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M46 46 Q40 52 36 52" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M64 46 Q70 52 74 52" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`,
+rdl_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="68" cy="38" rx="12" ry="10" fill="#2D2D2D" transform="rotate(-30 68 38)"/><circle cx="30" cy="28" r="8" fill="#2D2D2D"/><path d="M36 32 Q52 36 72 42" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M68 48 Q66 68 68 88" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M78 46 Q78 66 80 88" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M44 38 Q44 58 46 72" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M52 40 Q52 60 54 72" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><defs><marker id="a4" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M80 42 L94 36" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a4)"/></svg>`,
+curtsy_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="50" cy="34" rx="10" ry="13" fill="#2D2D2D"/><circle cx="50" cy="17" r="8" fill="#2D2D2D"/><path d="M46 46 Q44 64 42 80" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M42 80 Q40 90 38 96" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M54 46 Q68 58 76 70" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M76 70 Q74 82 68 90" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="76" cy="70" r="4" fill="#D4537E" opacity=".8"/><path d="M42 38 Q32 32 24 30" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M58 38 Q68 32 76 30" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`,
+plank_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="82" x2="105" y2="82" stroke="#C8C8C8" stroke-width="1.5"/><path d="M14 66 Q55 60 96 54" stroke="#2D2D2D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="100" cy="51" r="8" fill="#2D2D2D"/><path d="M18 66 Q18 74 24 78" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M28 64 Q28 72 34 76" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M14 66 Q10 72 8 78" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
+dead_bug_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="55" cy="70" rx="20" ry="9" fill="#2D2D2D"/><circle cx="28" cy="68" r="8" fill="#2D2D2D"/><path d="M40 64 Q36 50 32 36" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M52 64 Q58 50 68 36" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M48 72 Q44 60 40 52" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M40 52 Q34 46 28 46" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M62 72 Q68 76 80 80" stroke="#D4537E" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
+side_plank_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><path d="M15 86 Q55 72 88 52" stroke="#2D2D2D" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="92" cy="46" r="8" fill="#2D2D2D"/><path d="M18 86 Q14 88 8 88" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M64 62 Q72 50 76 40" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><defs><marker id="a6" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M50 74 L44 60" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a6)"/></svg>`,
+leg_raise_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><path d="M14 78 Q40 76 62 74" stroke="#2D2D2D" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="10" cy="74" r="8" fill="#2D2D2D"/><path d="M62 74 Q74 60 80 44" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M70 74 Q82 60 88 44" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M38 80 Q38 86 34 88" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M44 80 Q44 86 40 88" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`,
+bicycle_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><path d="M20 70 Q44 60 58 54" stroke="#2D2D2D" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="14" cy="64" r="8" fill="#2D2D2D"/><path d="M14 60 Q8 52 10 46" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M62 62 Q70 56 76 52" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M56 68 Q70 74 88 78" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><defs><marker id="a8" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M46 56 Q34 50 28 54" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a8)"/></svg>`,
+bird_dog_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><path d="M30 58 Q55 56 78 54" stroke="#2D2D2D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="88" cy="50" r="8" fill="#2D2D2D"/><path d="M72 58 Q74 72 76 82" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M40 60 Q38 74 36 82" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M78 56 Q92 48 104 42" stroke="#D4537E" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M32 58 Q18 56 8 52" stroke="#D4537E" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
+pushup_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="86" x2="105" y2="86" stroke="#C8C8C8" stroke-width="1.5"/><path d="M12 80 Q55 70 96 60" stroke="#2D2D2D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="102" cy="56" r="7" fill="#2D2D2D"/><path d="M22 74 Q18 80 14 84" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M36 71 Q32 77 28 82" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M12 80 Q8 84 6 86" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><defs><marker id="a9" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M60 62 L60 74" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a9)"/></svg>`,
+row_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="72" cy="42" rx="12" ry="9" fill="#2D2D2D" transform="rotate(-20 72 42)"/><circle cx="30" cy="30" r="8" fill="#2D2D2D"/><path d="M36 34 Q54 38 76 46" stroke="#2D2D2D" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M68 52 Q68 70 70 84" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M80 52 Q80 70 82 84" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M44 38 Q40 28 44 22" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M44 22 Q50 18 56 22" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M52 42 Q52 58 54 68" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><defs><marker id="a10" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#D4537E"/></marker></defs><path d="M44 24 L34 18" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a10)"/></svg>`,
+shoulder_press_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="55" cy="44" rx="10" ry="14" fill="#2D2D2D"/><circle cx="55" cy="24" r="8" fill="#2D2D2D"/><path d="M50 56 Q48 72 46 86" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M60 56 Q62 72 64 86" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M46 46 Q36 36 32 20" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M64 46 Q74 36 78 20" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><rect x="26" y="16" width="10" height="6" rx="2" fill="#9E9E9E"/><rect x="74" y="16" width="10" height="6" rx="2" fill="#9E9E9E"/></svg>`,
+tricep_dip_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><rect x="18" y="42" width="74" height="10" rx="3" fill="#9E9E9E"/><ellipse cx="55" cy="68" rx="10" ry="14" fill="#2D2D2D"/><circle cx="55" cy="50" r="7" fill="#2D2D2D"/><path d="M46 54 Q30 50 24 46" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M64 54 Q80 50 86 46" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M50 80 Q46 86 42 88" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M60 80 Q64 86 68 88" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><circle cx="30" cy="48" r="3" fill="#D4537E" opacity=".8"/><circle cx="80" cy="48" r="3" fill="#D4537E" opacity=".8"/></svg>`,
+reverse_fly_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="70" cy="44" rx="11" ry="9" fill="#2D2D2D" transform="rotate(-20 70 44)"/><circle cx="30" cy="32" r="8" fill="#2D2D2D"/><path d="M36 36 Q54 40 74 48" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M66 54 Q66 70 68 82" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M78 52 Q78 68 80 82" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M46 40 Q30 30 16 24" stroke="#D4537E" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M54 44 Q62 34 72 28" stroke="#D4537E" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`,
+jjack_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="96" x2="105" y2="96" stroke="#C8C8C8" stroke-width="1.5"/><ellipse cx="55" cy="42" rx="10" ry="13" fill="#2D2D2D"/><circle cx="55" cy="22" r="8" fill="#2D2D2D"/><path d="M50 54 Q36 72 22 86" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M60 54 Q74 72 88 86" stroke="#2D2D2D" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M46 44 Q30 30 16 22" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M64 44 Q80 30 94 22" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`,
+mountain_climber_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="86" x2="105" y2="86" stroke="#C8C8C8" stroke-width="1.5"/><path d="M14 78 Q55 66 96 56" stroke="#2D2D2D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="100" cy="52" r="7" fill="#2D2D2D"/><path d="M22 74 Q20 80 16 84" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M32 72 Q30 78 26 82" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M60 68 Q52 62 46 66" stroke="#D4537E" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M46 66 Q40 68 36 72" stroke="#D4537E" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M14 78 Q10 82 8 86" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
+hollow_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="88" x2="105" y2="88" stroke="#C8C8C8" stroke-width="1.5"/><path d="M20 76 Q55 68 90 60" stroke="#2D2D2D" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="14" cy="70" r="7" fill="#2D2D2D"/><path d="M18 70 Q10 60 8 50" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M22 68 Q14 58 12 48" stroke="#2D2D2D" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M86 62 Q96 58 104 54" stroke="#2D2D2D" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M88 66 Q98 62 106 60" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/></svg>`,
+plank_shoulder_tap_bg:`<svg width="110" height="100" viewBox="0 0 110 100"><line x1="5" y1="84" x2="105" y2="84" stroke="#C8C8C8" stroke-width="1.5"/><path d="M14 78 Q55 66 96 54" stroke="#2D2D2D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="100" cy="50" r="7" fill="#2D2D2D"/><path d="M30 72 Q28 78 24 82" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M50 67 Q52 56 64 58" stroke="#D4537E" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M14 78 Q10 82 8 84" stroke="#2D2D2D" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M18 77 Q14 81 12 84" stroke="#2D2D2D" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`
+};
+
+const EX={
+'a-lower':[
+  {id:'sq',fig:'squat_bg',name:'Squat a corpo libero',num:'N°1',sets:'4',reps:'15 rip',rest:'45 sec',muscles:'Quadricipiti · Glutei · Femorali · Core',steps:['Piedi larghezza spalle, punte leggermente aperte (15–30°). Peso distribuito su tutto il piede.','Inspira. Spingi il sedere indietro e in basso come se volessi sederti su una sedia bassa. Le ginocchia seguono la direzione delle punte.','Scendi finché le cosce sono parallele al suolo. I talloni restano SEMPRE a terra.','Espira. Spingi con forza i talloni a terra e risali contraendo i glutei.'],cue:'Immagina di voler dividere il pavimento a metà spingendo i piedi verso l\'esterno. Senti i glutei accendersi nella risalita.',error:'Ginocchia che collassano verso l\'interno. Talloni che si alzano. Tronco che si piega troppo in avanti.'},
+  {id:'ht',fig:'hip_thrust_bg',name:'Hip Thrust (ponte glutei avanzato)',num:'N°2',sets:'4',reps:'20 rip + iso 5 sec',rest:'30 sec',muscles:'Grande gluteo · Femorali · Core',steps:['Sdraiata sulla schiena, ginocchia piegate a 90°, piedi appoggiati a terra larghezza anche.','PRIMA di muoverti: contrai consapevolmente i glutei per 1–2 secondi. Questo "accende" il muscolo.','Spingi i talloni a terra e solleva il bacino finché cosce, bacino e busto formano una linea retta.','Tieni contratto 5 secondi schiacciando i glutei. Abbassa lentamente in 3 secondi.'],cue:'Concentrati sul "sollevare le anche verso il soffitto". Se il bacino non raggiunge la linea retta, il gluteo non lavora al massimo.',error:'Schiena che si inarca in iperestensione. Ginocchia che cedono verso l\'interno. Non contrarre abbastanza in alto.'},
+  {id:'rl',fig:'reverse_lunge_bg',name:'Affondo inverso (Reverse Lunge)',num:'N°3',sets:'3',reps:'12 per gamba',rest:'40 sec',muscles:'Quadricipite · Grande gluteo · Equilibrio · Core',steps:['Stai in piedi con i piedi uniti. Mani sui fianchi o braccia distese per l\'equilibrio.','Fai un GRANDE passo indietro con una gamba. Il piede posteriore si appoggia sulla punta.','Abbassa il corpo verticalmente finché il ginocchio posteriore sfiora quasi il suolo.','Fai forza con il piede anteriore (tallone) e riportati in piedi. Completa le rip, poi cambia gamba.'],cue:'Pensa "scendo verticale" non "mi lancio indietro". Il peso deve stare sul tallone della gamba davanti — lì si attiva il gluteo.',error:'Passo troppo corto: il ginocchio anteriore supera la punta del piede. Busto che si inclina troppo in avanti.'},
+  {id:'ss',fig:'sumo_squat_bg',name:'Squat Sumo (plié squat)',num:'N°4',sets:'3',reps:'15 rip + pulsazioni 3 sec',rest:'35 sec',muscles:'Gluteo medio · Adduttori · Quadricipiti',steps:['Apri i piedi molto più larghi delle spalle — quasi il doppio. Punte aperte a 45°.','Mani giunte davanti al petto. Mantieni il busto VERTICALE.','Scendi lentamente finché le cosce sono parallele al pavimento. Premi le ginocchia verso l\'esterno.','Sali a ¾, torna giù (pulsazione 3 sec in basso), poi sali completamente.'],cue:'Il gluteo medio si attiva molto di più con piedi larghi e punte aperte. È l\'esercizio che dà forma al gluteo lateralmente.',error:'Ginocchia che collassano verso l\'interno. Busto che si piega in avanti. Talloni che si alzano.'},
+  {id:'rdl',fig:'rdl_bg',name:'Stacco Rumeno (Romanian Deadlift)',num:'N°5',sets:'3',reps:'12 rip',rest:'45 sec',muscles:'Femorali · Grande gluteo · Erettori spinali · Core',steps:['In piedi, piedi larghezza anche. Tieni bottiglie davanti alle cosce, palmi verso di te.','Mantieni la schiena PIATTA con una leggera curva lombare naturale.','Spingendo il sedere INDIETRO, abbassa il busto lentamente. Gambe quasi tese.','Scendi finché senti tensione nei femorali. Contrai i glutei e risali.'],cue:'La differenza dallo squat: le ginocchia restano quasi ferme. Immagina di chiudere un cassetto con il sedere durante la risalita.',error:'Arrotondare la schiena — pericoloso. Piegarsi troppo in avanti con le spalle.'},
+  {id:'cu',fig:'curtsy_bg',name:'Curtsy Lunge (affondo a incrociare)',num:'N°6',sets:'3',reps:'10 per lato',rest:'35 sec',muscles:'Gluteo medio · Grande gluteo · Interno coscia',steps:['In piedi. Sposta il peso sul piede sinistro.','Porta la gamba destra in DIAGONALE dietro e di lato — come una riverenza teatrale. Punta del piede a terra.','Abbassa entrambe le ginocchia fino a circa 90°. Busto eretto.','Risali spingendo sul tallone della gamba davanti. Cambia lato.'],cue:'L\'unico esercizio che colpisce il gluteo medio in modo crociato. Quella bruciatura esterna è esattamente ciò che vuoi.',error:'Ginocchio di supporto che crolla verso l\'interno. Busto che si inclina di lato.'}
+],
+'a-core':[
+  {id:'plk',fig:'plank_bg',name:'Plank frontale su avambraccia',num:'N°1',sets:'3',reps:'40–50 sec',rest:'25 sec',muscles:'Trasverso addome · Retto addominale · Obliqui · Glutei',steps:['Avambraccia a terra. I gomiti DIRETTAMENTE sotto le spalle.','Stendi le gambe, appoggia solo le punte. Corpo in linea retta da testa a talloni.','Contrai l\'addome portando l\'ombelico verso la colonna. Contrai anche i glutei.','Mantieni la posizione respirando normalmente. Forma perfetta > durata.'],cue:'Immagina di avere un bicchiere d\'acqua sulla parte bassa della schiena. Non deve versarsi.',error:'Sedere troppo alto. Fianchi che cedono verso il basso. Trattenere il respiro.'},
+  {id:'db',fig:'dead_bug_bg',name:'Dead Bug',num:'N°2',sets:'3',reps:'8 per lato (lento)',rest:'25 sec',muscles:'Core profondo · Trasverso · Stabilizzatori lombari',steps:['Sdraiata. Braccia verticali verso il soffitto, gambe a 90° in aria.','La schiena lombare deve restare INCOLLATA al tappetino — fondamentale.','Abbassa LENTAMENTE braccio destro sopra la testa e gamba sinistra verso il suolo (lati OPPOSTI). Conta 4 secondi.','Ritorna lentamente. Ripeti sull\'altro lato.'],cue:'Questo insegna al core a stabilizzare la colonna mentre gli arti si muovono. Lento = efficace.',error:'Schiena lombare che si stacca dal tappetino. Trattenere il respiro. Velocità eccessiva.'},
+  {id:'sp',fig:'side_plank_bg',name:'Plank Laterale',num:'N°3',sets:'2 per lato',reps:'25–35 sec',rest:'20 sec',muscles:'Obliqui · Gluteo medio · Core laterale · Spalle',steps:['Sdraiati su un fianco. Avambraccio a terra con il gomito sotto la spalla.','Solleva il fianco da terra fino a creare una linea retta da testa a piedi.','Per più stabilità: piede superiore davanti. Per più difficoltà: piedi sovrapposti.','Mantieni contraendo gli obliqui.'],cue:'Spingi ATTIVAMENTE il fianco verso il soffitto invece di limitarti a tenerlo su.',error:'Fianco che cede verso il basso. Gomito non allineato sotto la spalla.'},
+  {id:'lr',fig:'leg_raise_bg',name:'Sollevamento Gambe (Leg Raise)',num:'N°4',sets:'3',reps:'12 rip',rest:'30 sec',muscles:'Retto addominale basso · Flessori anca · Core',steps:['Sdraiata. Mani sotto i glutei per supportare la zona lombare. Gambe quasi tese.','La schiena lombare resta PIATTA al suolo — fondamentale.','Solleva le gambe a 90°. Abbassa lentamente (3–4 sec) fino a pochi cm dal suolo.','NON lasciare toccare il suolo — la tensione non si spezza. Risali.'],cue:'La zona bassa dell\'addome è difficile da allenare. Questo è uno dei pochi esercizi che la colpisce davvero.',error:'Schiena lombare che si inarca — pericoloso. Slancio invece di controllo.'},
+  {id:'bc',fig:'bicycle_bg',name:'Crunch Bicicletta (Bicycle Crunch)',num:'N°5',sets:'3',reps:'20 rip totali (lente)',rest:'25 sec',muscles:'Obliqui · Retto addominale · Coordinazione',steps:['Sdraiata, mani leggere dietro la testa. Gambe in aria a 90°.','Porta il ginocchio destro verso il petto mentre estendi la sinistra. Ruota il BUSTO con il gomito sinistro verso il ginocchio destro.','Il movimento di rotazione viene dal BUSTO, non dal collo.','Alterna lentamente e con controllo.'],cue:'10 ripetizioni lente con vera rotazione del busto valgono 30 veloci senza rotazione.',error:'Tirare il collo con le mani. Movimento veloce e rimbalzante. Non ruotare davvero il busto.'},
+  {id:'bd',fig:'bird_dog_bg',name:'Bird Dog',num:'N°6',sets:'3',reps:'8 per lato',rest:'20 sec',muscles:'Core stabilizzatore · Erettori spinali · Glutei · Equilibrio',steps:['A 4 appoggi: mani sotto le spalle, ginocchia sotto le anche. Schiena in posizione NEUTRA.','Estendi braccio destro in avanti e gamba sinistra indietro simultaneamente (lati OPPOSTI).','Mantieni 2 secondi. Schiena non deve ruotare, bacino non deve inclinare.','Ritorna senza appoggiare a terra. Ripeti. Poi cambia lato.'],cue:'Immagina un piatto di cristallo sulla schiena — non deve scivolare. Più controlli il bacino, più lavora il core profondo.',error:'Bacino che ruota. Schiena che si inarca. Alzare braccio/gamba troppo in alto.'}
+],
+'b-upper':[
+  {id:'pu',fig:'pushup_bg',name:'Push-Up (flessioni)',num:'N°1',sets:'4',reps:'10–12 rip',rest:'45 sec',muscles:'Petto · Spalle anteriori · Tricipiti · Core',steps:['Mani a terra larghezza spalle. Corpo in linea retta da testa a talloni.','I gomiti a 45° rispetto al corpo — non a 90°. Protegge le spalle.','Abbassa il corpo lentamente (3 sec) avvicinando il petto al suolo.','Spingi via dal pavimento espirando. Versione sulle ginocchia: stessa forma.'],cue:'Pensa "spingi il pavimento via da me". Senti la differenza — attiva meglio il petto.',error:'Fianchi che cedono. Testa che cade in avanti. Gomiti che svasano a 90°.'},
+  {id:'ro',fig:'row_bg',name:'Bent-Over Row (rematore)',num:'N°2',sets:'3',reps:'12 rip',rest:'40 sec',muscles:'Gran dorsale · Romboidi · Trapezi · Bicipiti · Core',steps:['In piedi con un peso in ogni mano. Piega le anche a 45°. Schiena PIATTA.','Parti con le braccia tese. Retrare le scapole (avvicinarle) prima di tirare.','Tira i GOMITI verso il soffitto, non le mani. Il movimento parte dalla schiena.','Abbassa lentamente (3 sec) con controllo.'],cue:'Avvicina le scapole. Se fai questo prima di tirare, il dorsale si attiverà al 100%.',error:'Schiena arrotondata — pericoloso. Usare il momentum del busto.'},
+  {id:'sp2',fig:'shoulder_press_bg',name:'Shoulder Press (lento manubri)',num:'N°3',sets:'3',reps:'12 rip',rest:'40 sec',muscles:'Deltoide anteriore e laterale · Trapezi · Tricipiti',steps:['In piedi o seduta. Pesi all\'altezza delle spalle, gomiti a 90°, palmi in avanti.','Contrai il core. NON inarcare la schiena.','Spingi le braccia verso l\'alto in modo armonico.','Abbassa lentamente (3 sec) tornando alla posizione di partenza.'],cue:'Se devi inarcare la schiena per sollevare, il peso è troppo pesante — riducilo.',error:'Iperestensione lombare. Spalle che salgono verso le orecchie.'},
+  {id:'td',fig:'tricep_dip_bg',name:'Tricep Dip su sedia',num:'N°4',sets:'3',reps:'12 rip',rest:'35 sec',muscles:'Tricipiti · Deltoide posteriore · Petto inferiore',steps:['Mani sul bordo di una sedia stabile, dita puntate in avanti.','La schiena resta VICINA alla sedia.','Abbassa lentamente il corpo piegando i GOMITI fino a 90°. I gomiti scendono INDIETRO.','Spingi sui palmi e risali.'],cue:'La spalla si abbassa solo quanto il gomito piega — mai oltre i 90°.',error:'Spalle che salgono verso le orecchie. Gomiti che svasano. Schiena troppo distante dalla sedia.'},
+  {id:'rf',fig:'reverse_fly_bg',name:'Alzate posteriori (Reverse Fly)',num:'N°5',sets:'3',reps:'15 rip',rest:'35 sec',muscles:'Deltoide posteriore · Romboidi · Trapezi medi',steps:['In piedi, busto inclinato 45° in avanti, schiena piatta. Peso leggero in ogni mano.','Alza le braccia lateralmente aprendo "le ali" fino all\'altezza delle spalle.','Tieni 1 secondo in alto. Abbassa lentamente in 3 secondi.','Braccia quasi tese — non piegare troppo i gomiti.'],cue:'Corregge la postura curva da sedentarietà. Il deltoide posteriore è il muscolo più dimenticato.',error:'Peso troppo pesante che causa compensi. Gomiti che si piegano troppo.'}
+],
+'b-cardio':[
+  {id:'jj',fig:'jjack_bg',name:'Jumping Jack (salti a stella)',num:'N°1',sets:'2–3 round',reps:'40 sec lavoro · 20 sec riposo',rest:'60 sec tra round',muscles:'Cardio · Gambe · Spalle · Coordinazione',steps:['Posizione di partenza: piedi uniti, braccia lungo i fianchi.','Salta aprendo le gambe e portando le braccia sopra la testa contemporaneamente.','Salta di nuovo chiudendo gambe e braccia. Movimento coordinato continuo.','Variante a basso impatto: step laterale invece del salto.'],cue:'Atterraggio morbido: prima la punta del piede, poi il tallone.',error:'Atterraggio rigido con gambe tese. Braccia che non salgono. Ginocchia bloccate.'},
+  {id:'mc',fig:'mountain_climber_bg',name:'Mountain Climber (scalatore)',num:'N°2',sets:'2–3 round',reps:'30 sec lavoro · 20 sec riposo',rest:'60 sec tra round',muscles:'Core · Flessori anca · Spalle · Cardio',steps:['Inizia in posizione di plank con le braccia tese.','Porta il ginocchio destro verso il petto velocemente. Poi riportalo e porta il sinistro.','Il bacino resta BASSO e stabile — non rimbalzare su e giù.','Inizia controllato, poi accelera con la pratica.'],cue:'Il core è il tuo motore. Se si disattiva, il bacino sale e l\'esercizio perde efficacia.',error:'Bacino che si alza. Ginocchia che non arrivano al petto. Braccia che cedono.'},
+  {id:'sjump',fig:'squat_bg',name:'Squat Jump (squat esplosivo)',num:'N°3',sets:'2–3 round',reps:'25 sec lavoro · 20 sec riposo',rest:'60 sec tra round',muscles:'Quadricipiti · Glutei · Polpacci · Cardio esplosivo',steps:['Scendi in uno squat normale con cosce parallele al suolo.','Carica 1 secondo in basso (accumula tensione). Poi ESPLODI verso l\'alto.','Durante il volo, porta le braccia verso il basso per aiutare la spinta.','Atterraggio morbido: prima le punte, poi i talloni. Torna in squat e ripeti.'],cue:'L\'impatto a terra deve essere SILENZIOSO. Se senti un "thud" forte, stai atterrando troppo rigido.',error:'Atterraggio con gambe rigide. Non raggiungere la profondità dello squat.'}
+],
+'b-core':[
+  {id:'hol',fig:'hollow_bg',name:'Hollow Body Hold',num:'N°1',sets:'3',reps:'25–35 sec',rest:'25 sec',muscles:'Core profondo · Retto addominale · Flessori anca',steps:['Sdraiata. Contrai l\'addome portando la schiena PIATTA al suolo.','Solleva le gambe quasi tese a circa 15 cm dal suolo. Braccia tese sopra la testa.','Solleva anche testa e spalle leggermente. Tutto il corpo in tensione.','Respira normalmente. Se la lombare si stacca, piega le ginocchia.'],cue:'Esercizio base della ginnastica artistica. Sviluppa il core più profondo. È più intenso del plank.',error:'Schiena lombare che si stacca dal suolo. Trattenere il respiro.'},
+  {id:'sp3',fig:'side_plank_bg',name:'Plank Laterale con rotazione',num:'N°2',sets:'2 per lato',reps:'20–30 sec',rest:'20 sec',muscles:'Obliqui · Gluteo medio · Core laterale',steps:['Posizione di plank laterale su avambraccio.','Porta il braccio libero sotto il corpo ruotando leggermente il busto.','Poi apri il braccio verso il soffitto ruotando nella direzione opposta.','Movimento piccolo e controllato — non è una torsione completa.'],cue:'La rotazione aggiunge lavoro dinamico agli obliqui rendendolo più efficace del plank laterale statico.',error:'Perdere l\'allineamento durante la rotazione. Fianco che cede.'},
+  {id:'pt',fig:'plank_shoulder_tap_bg',name:'Plank con tocco spalla',num:'N°3',sets:'3',reps:'16 tap (8 per lato)',rest:'25 sec',muscles:'Core anti-rotazione · Spalle · Stabilità totale',steps:['Posizione di plank con braccia TESE. Mani sotto le spalle.','Alza la mano destra e tocca la spalla sinistra. Ritorna.','Poi alza la mano sinistra e tocca la spalla destra. Il bacino NON deve ruotare.','Per facilitare: piedi più larghi. Per aumentare difficoltà: piedi vicini.'],cue:'Ogni volta che sollevi una mano, stai lavorando contro la rotazione del tronco.',error:'Bacino che ruota. Velocità eccessiva che porta a compensi.'}
+]
+};
+
+function buildCards(cid,list){
+  const c=document.getElementById(cid);if(!c)return;
+  c.innerHTML=list.map((e,i)=>`<div class="ex-card" id="card-${cid}-${i}" onclick="toggleEx('card-${cid}-${i}')">
+    <div class="ex-num-row"><span class="ex-num">${e.num}</span><div class="ex-chips-top"><span class="ex-chip">${e.sets}×${e.reps}</span><span class="ex-chip">rec ${e.rest}</span></div></div>
+    <div class="fig-wrap">${SVG[e.fig]||''}</div>
+    <div class="ex-bottom"><div class="ex-name">${e.name}</div><div class="ex-muscles">${e.muscles}</div></div>
+    <div class="ex-detail">
+      <div class="info-grid"><div class="info-box"><div class="info-val">${e.sets}</div><div class="info-key">Serie</div></div><div class="info-box"><div class="info-val">${e.reps}</div><div class="info-key">Rip / Tempo</div></div><div class="info-box"><div class="info-val">${e.rest}</div><div class="info-key">Recupero</div></div></div>
+      <div style="font-size:11px;font-weight:600;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Come si esegue</div>
+      ${e.steps.map((s,n)=>`<div class="step"><div class="step-num">${n+1}</div><div>${s}</div></div>`).join('')}
+      <div class="cue-box"><strong>Cue allenatore:</strong> ${e.cue}</div>
+      <div class="warn-box"><strong>Errore comune:</strong> ${e.error}</div>
+    </div></div>`).join('');
+}
+['a-lower','a-core','b-upper','b-cardio','b-core'].forEach(k=>buildCards('grid-'+k,EX[k]));
+
+const progData=[['Squat','4 × 15 · forma perfetta','4 × 18 · 3 sec di discesa controllata'],['Hip Thrust','4 × 20 + iso 5 sec','5 × 20 · o single leg bridge'],['Reverse Lunge','3 × 12/gamba','3 × 15 · aggiungere manubri leggeri'],['Squat Sumo','3 × 15 + pulsazioni','4 × 15 · pulsazioni più lente (5 sec)'],['Stacco Rumeno','3 × 12 · peso leggero','4 × 12 · peso aumentato + iso 2 sec'],['Curtsy Lunge','3 × 10/lato','3 × 12 · + mini squat tra affondi'],['Plank','3 × 40 sec','3 × 55 sec · o shoulder tap version'],['Dead Bug','3 × 8/lato','3 × 10/lato'],['Push-Up','4 × 10 (ginocchia ok)','4 × 12 · piedi a terra'],['Row (rematore)','3 × 12 · bottiglie','4 × 12 · manubri + iso 2 sec'],['Shoulder Press','3 × 12 · peso leggero','4 × 12 · pausa 1 sec in cima'],['Cardio HIIT','2 round · 60 sec riposo','3 round · 45 sec riposo']];
+const pr=document.getElementById('prog-rows');
+if(pr)pr.innerHTML=progData.map(r=>`<div class="prog-row"><div class="prog-cell name">${r[0]}</div><div class="prog-cell">${r[1]}</div><div class="prog-cell w2">${r[2]}</div></div>`).join('');
+
+const altData=[['Squat','Squat con sedia (assistito)','Squat jump · pistol squat'],['Hip Thrust','Senza iso · range ridotto','Single leg hip thrust'],['Push-Up','Sulle ginocchia · al muro','Piedi elevati · archer push-up'],['Plank','Sulle ginocchia','Con estensione alternata'],['Leg Raise','Ginocchia piegate','Hanging leg raise (sbarra)'],['Mountain Climber','Lento e controllato','Cross-body (ginocchio al gomito opposto)'],['Reverse Lunge','Affondo statico','Lunge jump (con salto)'],['Row','Bottiglie vuote','Manubri 3 kg · chest-supported row']];
+const ar=document.getElementById('alt-rows');
+if(ar)ar.innerHTML=altData.map(r=>`<div style="display:grid;grid-template-columns:140px 1fr 1fr;gap:1px;background:#e0e0e0"><div style="padding:7px 10px;background:#f5f5f5;font-size:12px;font-weight:600">${r[0]}</div><div style="padding:7px 10px;background:#fff;font-size:12px;color:#3B6D11">${r[1]}</div><div style="padding:7px 10px;background:#fff;font-size:12px;color:#993556">${r[2]}</div></div>`).join('');
+
+const tips=[{i:'💧',t:'Idratazione',b:'2 L al giorno base. Nei giorni di allenamento +400–500 ml. La disidratazione riduce la performance muscolare del 10–20% e peggiora la ritenzione idrica.'},{i:'🥚',t:'Proteine (fondamentale)',b:'1,4–1,6 g per kg di peso = 75–85 g/giorno. Fonti: uova, yogurt greco, pollo, legumi, pesce. Senza proteine non c\'è tonificazione.'},{i:'🍌',t:'Pasto pre-allenamento',b:'30–45 min prima: carboidrati + proteina leggera. Esempio: banana + yogurt greco. A digiuno = meno energia, più catabolismo muscolare.'},{i:'😴',t:'Sonno (non negoziabile)',b:'7–8 ore. Il muscolo cresce durante il sonno. Il GH viene rilasciato nelle prime ore di sonno. Dormire poco = cortisolo alto = grasso addominale.'},{i:'🚶',t:'NEAT nei giorni di riposo',b:'Cammina 30–45 min. Può bruciare 200–400 kcal extra. Riduce la ritenzione e migliora il recupero muscolare.'},{i:'🔥',t:'Attivazione glutei pre-workout',b:'Prima di ogni esercizio glutei: 15 clamshell o 15 hip thrust isometrici lenti. Un gluteo "addormentato" non si attiva bene neanche con tecnica perfetta.'},{i:'📏',t:'Come misurare i progressi',b:'NON solo il peso. Misura: vita, fianchi, coscia ogni 2 settimane. Foto ogni 4 settimane (stessa ora, stessa luce). Il peso può salire mentre il corpo migliora.'},{i:'🧠',t:'Connessione mente-muscolo',b:'Visualizza il muscolo che lavora durante ogni esercizio. Studi: pensare al muscolo target aumenta l\'attivazione del 20–30%.'},{i:'❤️',t:'Gestione del cortisolo',b:'Stress cronico = cortisolo alto = grasso addominale + ritenzione. Stretching, respirazione, sonno non sono accessori — sono parte del programma.'},{i:'🍽️',t:'Deficit calorico intelligente',b:'Un deficit di –200/–300 kcal è sufficiente. Diete drastiche causano perdita di massa magra e rallentano il metabolismo.'},{i:'🧊',t:'Recupero post-workout',b:'Doccia fredda finale (30 sec) riduce l\'infiammazione. Foam rolling 5 min sui muscoli allenati riduce i dolori del giorno dopo.'},{i:'📅',t:'La regola d\'oro',b:'Costanza batte perfezione. 2 allenamenti fatti bene per 8 settimane > 5 allenamenti perfetti per 2 settimane. Se non hai tempo, fai anche 20 min.'}];
+const tg=document.getElementById('tip-grid');
+if(tg)tg.innerHTML=tips.map(t=>`<div class="tip-card"><div class="tip-ico">${t.i}</div><div class="tip-t">${t.t}</div><div class="tip-b">${t.b}</div></div>`).join('');
+
+const wkState=[[false,false],[false,false],[false,false],[false,false]];
+function renderTracker(){
+  const g=document.getElementById('week-grid');if(!g)return;
+  g.innerHTML=wkState.map((w,wi)=>`<div class="wk-card" style="${w[0]&&w[1]?'border-color:#D4537E;background:#FBEAF0':''}"><div class="wk-title">Settimana ${wi+1} ${w[0]&&w[1]?'✓':''}</div><div class="wk-days"><button class="wk-day-btn ${w[0]?'done':''}" onclick="toggleDay(${wi},0)">A</button><button class="wk-day-btn ${w[1]?'done':''}" onclick="toggleDay(${wi},1)">B</button></div></div>`).join('');
+  let done=0;wkState.forEach(w=>w.forEach(d=>{if(d)done++}));
+  const dn=document.getElementById('done-n'),pv=document.getElementById('pct-val');
+  if(dn)dn.textContent=done;if(pv)pv.textContent=Math.round(done/8*100)+'%';
+}
+function toggleDay(wi,di){wkState[wi][di]=!wkState[wi][di];renderTracker()}
+renderTracker();
+</script>
+</body>
+</html>
